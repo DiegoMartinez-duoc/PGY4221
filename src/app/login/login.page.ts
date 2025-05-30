@@ -1,4 +1,6 @@
 import { Component, OnInit } from '@angular/core';
+import { ActivatedRoute, Router, NavigationExtras  } from '@angular/router';
+import { NgForm } from '@angular/forms';
 
 @Component({
   selector: 'app-login',
@@ -8,9 +10,25 @@ import { Component, OnInit } from '@angular/core';
 })
 export class LoginPage implements OnInit {
 
-  constructor() { }
+  user = {
+    usuario:"",
+    password:""
+  }
+
+  constructor(private router: Router) { }
 
   ngOnInit() {
+  }
+
+  ingresar(form: NgForm) {
+    if (form.valid) {
+      const navigationExtras: NavigationExtras = {
+        state: {
+          user: this.user
+        }
+      };
+      this.router.navigate(['/home'], navigationExtras);
+    }
   }
 
 }
