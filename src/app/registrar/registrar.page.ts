@@ -3,17 +3,22 @@ import { ActivatedRoute, Router, NavigationExtras  } from '@angular/router';
 import { NgForm } from '@angular/forms';
 
 @Component({
-  selector: 'app-login',
-  templateUrl: './login.page.html',
-  styleUrls: ['./login.page.scss'],
+  selector: 'app-registrar',
+  templateUrl: './registrar.page.html',
+  styleUrls: ['./registrar.page.scss'],
   standalone: false,
 })
-export class LoginPage implements OnInit {
-
-  userData = {
-    usuario:"",
-    password:""
-  }
+export class RegistrarPage implements OnInit {
+  data: any; 
+  fechaModalVisible = false; 
+  userData: any = { 
+    usuario: '',
+    nombre: '',
+    apellido: '',
+    educacion: '',
+    fechaNacimiento: new Date().toISOString(),
+    password: ''
+  };
 
   constructor(private router: Router) { }
 
@@ -31,8 +36,18 @@ export class LoginPage implements OnInit {
     }
   }
 
-  registrar() {
-    this.router.navigate(['/registrar']);
+  
+
+  abrirSelectorFecha() {
+    this.fechaModalVisible = true;
+  }
+
+  fechaSeleccionada() {
+    this.fechaModalVisible = false;
+  }
+
+  login() {
+    this.router.navigate(['/login']);
   }
 
 }

@@ -1,103 +1,90 @@
 <ion-header [translucent]="true">
-  <ion-toolbar>
-    <ion-title>
-      Blank
-    </ion-title>
+  <ion-toolbar color="primary">
+    <ion-buttons slot="start">
+      <ion-title>Home</ion-title>
+    </ion-buttons>
+    
+    <ion-buttons slot="end">
+      <ion-chip 
+        button
+        color="secondary" 
+        class="ion-margin-end"
+        (click)="goToProfile()">
+        <ion-avatar>
+          <img src="https://ionicframework.com/docs/img/demos/avatar.svg">
+        </ion-avatar>
+        <ion-label class="user">{{userData.usuario}}</ion-label>
+      </ion-chip>
+    </ion-buttons>
   </ion-toolbar>
 </ion-header>
 
-<ion-content [fullscreen]="true">
-  <!-- Datos de usuario, mostrando el usuario ingresado con el boton "Mostrar" y limpiando los datos con el boton "Limpiar" -->
-  <ion-card>
-    <ion-card-header>
-      <ion-card-title>Información del Usuario</ion-card-title>
-    </ion-card-header>
-    
-    <ion-card-content>
-      <ion-item>
-        <ion-label>Usuario:</ion-label>
-        <ion-text>{{ data?.usuario }}</ion-text>
-      </ion-item>
-
-      <ion-item>
-        <ion-label position="floating">Nombre</ion-label>
-        <ion-input [(ngModel)]="userData.nombre"></ion-input>
-      </ion-item>
-
-      <ion-item>
-        <ion-label position="floating">Apellido</ion-label>
-        <ion-input [(ngModel)]="userData.apellido"></ion-input>
-      </ion-item>
-
-      <ion-item>
-        <ion-label position="floating">Nivel de Educación</ion-label>
-        <ion-select [(ngModel)]="userData.educacion">
-          <ion-select-option value="basica">Básica</ion-select-option>
-          <ion-select-option value="media">Media</ion-select-option>
-          <ion-select-option value="superior">Superior</ion-select-option>
-        </ion-select>
-      </ion-item>
-
-      <ion-item (click)="abrirSelectorFecha()">
-        <ion-label position="floating">Fecha de Nacimiento</ion-label>
-        <ion-input 
-          [value]="userData.fechaNacimiento | date: 'dd/MM/yyyy'" 
-          readonly 
-          placeholder="Seleccionar fecha"
-        ></ion-input>
-        <ion-icon slot="end" name="calendar" style="margin-right: 10px;"></ion-icon>
-      </ion-item>
-
+<ion-content [fullscreen]="true" class="ion-padding">
+  <div class="center-container">
+    <ion-card 
+      button 
+      class="game-card ion-fade-in"
+      (click)="goToPong()"
+      [@bounceAnimation]="animationState">
+      <ion-card-header>
+        <ion-card-title class="game-title">
+          <ion-icon name="game-controller-outline" size="large"></ion-icon>
+          PONG
+        </ion-card-title>
+      </ion-card-header>
       
-      <ion-row>
-        <ion-col>
-          <ion-button expand="block" color="medium" (click)="limpiarCampos()">
-            Limpiar
-          </ion-button>
-        </ion-col>
-        <ion-col>
-          <ion-button expand="block" (click)="mostrarInformacion()">
-            Mostrar
-          </ion-button>
-        </ion-col>
-      </ion-row>
-    </ion-card-content>
-  </ion-card>
+      <ion-card-content>
+        <div class="game-preview">
+          <div class="pong-table">
+            <div class="paddle left"></div>
+            <div class="ball"></div>
+            <div class="paddle right"></div>
+          </div>
+        </div>
+        <ion-note>Juega al clásico juego de Pong</ion-note>
+      </ion-card-content>
+    </ion-card>
 
-  <ion-modal [isOpen]="fechaModalVisible" (didDismiss)="fechaModalVisible = false">
-    <ng-template>
-      <ion-header>
-        <ion-toolbar>
-          <ion-title>Seleccionar Fecha</ion-title>
-          <ion-buttons slot="end">
-            <ion-button (click)="fechaModalVisible = false">Cerrar</ion-button>
-          </ion-buttons>
-        </ion-toolbar>
-      </ion-header>
-      <ion-content class="ion-padding">
-        <ion-datetime 
-          presentation="date" 
-          [(ngModel)]="userData.fechaNacimiento" 
-          (ionChange)="fechaSeleccionada()"
-        ></ion-datetime>
-      </ion-content>
-    </ng-template>
-  </ion-modal>
-
-  <ion-modal [isOpen]="modalVisible">
-    <ng-template>
-      <ion-header>
-        <ion-toolbar>
-          <ion-title>Usuario del Login</ion-title>
-          <ion-buttons slot="end">
-            <ion-button (click)="modalVisible = false">Cerrar</ion-button>
-          </ion-buttons>
-        </ion-toolbar>
-      </ion-header>
-      <ion-content class="ion-padding">
-        <h2>Usuario ingresado:</h2>
-        <p>{{ data?.usuario }}</p>
-      </ion-content>
-    </ng-template>
-  </ion-modal>
+    <ion-card 
+      button 
+      class="game-card ion-slide-in-bottom"
+      (click)="goToClasificacion()"
+      [@bounceAnimation]="animationState">
+      <ion-card-header>
+        <ion-card-title class="game-title">
+          <ion-icon name="podium-outline" size="large"></ion-icon>
+          CLASIFICACIÓN
+        </ion-card-title>
+      </ion-card-header>
+      
+      <ion-card-content>
+        <div class="ranking-preview">
+          <ion-list lines="none">
+            <ion-item>
+              <ion-avatar slot="start">
+                <img src="https://ionicframework.com/docs/img/demos/avatar.svg">
+              </ion-avatar>
+              <ion-label>Jugador 1</ion-label>
+              <ion-badge color="warning">1°</ion-badge>
+            </ion-item>
+            <ion-item>
+              <ion-avatar slot="start">
+                <img src="https://ionicframework.com/docs/img/demos/avatar.svg">
+              </ion-avatar>
+              <ion-label>Jugador 2</ion-label>
+              <ion-badge color="medium">2°</ion-badge>
+            </ion-item>
+            <ion-item>
+              <ion-avatar slot="start">
+                <img src="https://ionicframework.com/docs/img/demos/avatar.svg">
+              </ion-avatar>
+              <ion-label>Jugador 3</ion-label>
+              <ion-badge color="tertiary">3°</ion-badge>
+            </ion-item>
+          </ion-list>
+        </div>
+        <ion-note>Consulta el ranking de jugadores</ion-note>
+      </ion-card-content>
+    </ion-card>
+  </div>
 </ion-content>

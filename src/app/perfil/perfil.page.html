@@ -1,0 +1,23 @@
+<ion-header [translucent]="true">
+  <ion-toolbar color="primary">
+    <ion-buttons slot="start">
+      <ion-back-button defaultHref="/home"></ion-back-button>
+    </ion-buttons>
+    <ion-title>Perfil</ion-title>
+  </ion-toolbar>
+</ion-header>
+
+<ion-content [fullscreen]="true">
+  <ion-card>
+    <ion-card-content>
+      <ion-chip 
+        color="secondary" 
+        class="ion-margin-end">
+        <ion-avatar>
+          <img src="https://ionicframework.com/docs/img/demos/avatar.svg">
+        </ion-avatar>
+        <ion-label class="user">{{userData.usuario}}</ion-label>
+      </ion-chip>
+    </ion-card-content>
+  </ion-card>
+</ion-content>

@@ -1,6 +1,6 @@
 <ion-header [translucent]="true">
-  <ion-toolbar>
-    <ion-title>SkeletonAPP login</ion-title>
+  <ion-toolbar color="primary">
+    <ion-title>Login</ion-title>
   </ion-toolbar>
 </ion-header>
 
@@ -18,7 +18,7 @@
           <ion-input 
             type="text" 
             name="usuario"
-            [(ngModel)]="user.usuario"
+            [(ngModel)]="userData.usuario"
             minlength="3"
             maxlength="8"
             pattern="[a-zA-Z0-9]+"
@@ -39,7 +39,7 @@
           <ion-input 
             type="password" 
             name="password"
-            [(ngModel)]="user.password"
+            [(ngModel)]="userData.password"
             minlength="4"
             maxlength="4"
             pattern="[0-9]+"
@@ -67,6 +67,15 @@
           </ion-col>
         </ion-row>
       </form>
+
+      <ion-col>
+        <ion-button expand="block" color="medium" (click)="registrar()">
+          ¿No tienes una cuenta? Registrate aqui
+        </ion-button>
+      </ion-col>
+
+
+
     </ion-card-content>
   </ion-card>
 </ion-content>

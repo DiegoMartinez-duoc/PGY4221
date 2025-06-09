@@ -1,0 +1,89 @@
+<ion-header [translucent]="true">
+  <ion-toolbar color="primary">
+    <ion-buttons slot="start">
+      <ion-back-button defaultHref="/home"></ion-back-button>
+    </ion-buttons>
+    <ion-title>Clasificacion</ion-title>
+    <ion-buttons slot="end">
+      <ion-chip color="secondary" class="ion-margin-end">
+        <ion-avatar>
+          <img src="https://ionicframework.com/docs/img/demos/avatar.svg">
+        </ion-avatar>
+        <ion-label class="user">{{userData.usuario}}</ion-label>
+      </ion-chip>
+    </ion-buttons>
+  </ion-toolbar>
+</ion-header>
+
+<ion-content [fullscreen]="true">
+  <ion-card>
+    <ion-card-header>
+      <ion-card-title class="ranking-title">
+        <ion-icon name="podium-outline" size="large"></ion-icon>
+        CLASIFICACIÓN
+      </ion-card-title>
+    </ion-card-header>
+    
+    <ion-card-content>
+      <div class="ranking">
+        <ion-list lines="none">
+          <ion-item>
+            <ion-avatar slot="start">
+              <img src="https://ionicframework.com/docs/img/demos/avatar.svg">
+            </ion-avatar>
+            <ion-label>Jugador 1</ion-label>
+            <ion-badge color="warning">1°</ion-badge>
+          </ion-item>
+          <ion-item>
+            <ion-avatar slot="start">
+              <img src="https://ionicframework.com/docs/img/demos/avatar.svg">
+            </ion-avatar>
+            <ion-label>Jugador 2</ion-label>
+            <ion-badge color="medium">2°</ion-badge>
+          </ion-item>
+          <ion-item>
+            <ion-avatar slot="start">
+              <img src="https://ionicframework.com/docs/img/demos/avatar.svg">
+            </ion-avatar>
+            <ion-label>Jugador 3</ion-label>
+            <ion-badge color="tertiary">3°</ion-badge>
+          </ion-item>
+          <ion-item>
+            <ion-avatar slot="start">
+              <img src="https://ionicframework.com/docs/img/demos/avatar.svg">
+            </ion-avatar>
+            <ion-label>Jugador 4</ion-label>
+            <ion-badge color="tertiary">4°</ion-badge>
+          </ion-item>
+          <ion-item>
+            <ion-avatar slot="start">
+              <img src="https://ionicframework.com/docs/img/demos/avatar.svg">
+            </ion-avatar>
+            <ion-label>Jugador 5</ion-label>
+            <ion-badge color="tertiary">5°</ion-badge>
+          </ion-item>
+          <ion-item>
+            <ion-avatar slot="start">
+              <img src="https://ionicframework.com/docs/img/demos/avatar.svg">
+            </ion-avatar>
+            <ion-label>Jugador 6</ion-label>
+            <ion-badge color="tertiary">6°</ion-badge>
+          </ion-item>
+          <ion-item>
+            <ion-avatar slot="start">
+              <img src="https://ionicframework.com/docs/img/demos/avatar.svg">
+            </ion-avatar>
+            <ion-label>Jugador 7</ion-label>
+            <ion-badge color="tertiary">7°</ion-badge>
+          </ion-item>
+        </ion-list>
+      </div>
+
+      <ion-button class="cargar" color="white" fill="outline">
+        <ion-icon slot="load" name="reload-outline"></ion-icon>
+        Cargar mas resultados
+      </ion-button>
+      
+    </ion-card-content>
+  </ion-card>
+</ion-content>

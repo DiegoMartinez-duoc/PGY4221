@@ -1,0 +1,131 @@
+.pong-container {
+  --paddle-color: var(--ion-color-primary); 
+  --ball-color: var(--ion-color-danger);   
+  --bg-color: #2c3e50;                     
+  --text-color: #ecf0f1;                   
+  
+  background: linear-gradient(to bottom, #1a2980, #26d0ce);
+  display: flex;
+  flex-direction: column;
+  justify-content: space-between;
+  height: 100%;
+  overflow: hidden;
+  position: relative;
+  
+  &::before {
+    content: '';
+    position: absolute;
+    top: 0;
+    left: 50%;
+    width: 2px;
+    height: 100%;
+    background: rgba(255, 255, 255, 0.2);
+    transform: translateX(-50%);
+  }
+}
+
+.user {
+    color: black;
+}
+
+.rival-paddle, .player-paddle {
+  display: flex;
+  justify-content: center;
+  padding: 15px 0;
+  z-index: 10;
+}
+
+.rival-paddle {
+  align-items: flex-start;
+}
+
+.player-paddle {
+  align-items: flex-end;
+  margin-top: 500px;
+}
+
+.paddle {
+  width: 120px;
+  height: 20px;
+  background-color: var(--paddle-color);
+  border-radius: 10px;
+  box-shadow: 0 2px 10px rgba(0, 0, 0, 0.3);
+}
+
+.ball-container {
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+  z-index: 5;
+}
+
+.ball {
+  width: 30px;
+  height: 30px;
+  background-color: var(--ball-color);
+  border-radius: 50%;
+  box-shadow: 0 0 15px rgba(231, 76, 60, 0.7);
+  animation: pulse 1.5s infinite alternate;
+}
+
+@keyframes pulse {
+  from { transform: scale(1); }
+  to { transform: scale(1.1); }
+}
+
+.score-board {
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+  display: flex;
+  align-items: center;
+  font-size: 3rem;
+  color: var(--text-color);
+  font-weight: bold;
+  text-shadow: 0 2px 4px rgba(0, 0, 0, 0.5);
+  opacity: 0.8;
+  
+  .score {
+    min-width: 60px;
+    text-align: center;
+  }
+  
+  .score-divider {
+    margin: 0 10px;
+  }
+}
+
+.game-message {
+  position: absolute;
+  bottom: 30%;
+  left: 0;
+  right: 0;
+  text-align: center;
+  z-index: 20;
+  
+  ion-text h2 {
+    font-size: 1.8rem;
+    font-weight: bold;
+    text-shadow: 0 2px 4px rgba(0, 0, 0, 0.5);
+    margin-bottom: 20px;
+    color: white;
+  }
+  
+  ion-button {
+    --border-width: 2px;
+    --border-radius: 25px;
+    font-weight: bold;
+    padding: 0 30px;
+  }
+}
+
+.ball-container {
+  animation: fadeIn 1s ease-out;
+}
+
+@keyframes fadeIn {
+  from { opacity: 0; transform: translate(-50%, -60%); }
+  to { opacity: 1; transform: translate(-50%, -50%); }
+}
