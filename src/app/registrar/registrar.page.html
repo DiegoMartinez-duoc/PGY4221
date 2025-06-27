@@ -1,109 +1,140 @@
 <ion-header [translucent]="true">
-  <ion-toolbar color="primary">
-    <ion-title>
-      Registro
-    </ion-title>
+  <ion-toolbar color="dark">
+    <ion-title></ion-title>
   </ion-toolbar>
 </ion-header>
 
-<ion-content [fullscreen]="true">
-  <ion-card>
-    <ion-card-header>
-      <ion-card-title>Registrarse</ion-card-title>
-    </ion-card-header>
-    
-    <ion-card-content>
-      <form #loginForm="ngForm" (ngSubmit)="ingresar(loginForm)">
-        <ion-item lines="full">
-          <ion-label position="floating">Nombre de Usuario</ion-label>
-          <ion-input 
-            type="text" 
-            name="usuario"
-            [(ngModel)]="userData.usuario"
-            minlength="3"
-            maxlength="8"
-            pattern="[a-zA-Z0-9]+"
-            required
-            #usuarioInput="ngModel">
-          </ion-input>
-        </ion-item>
+<ion-content [fullscreen]="true" class="registrar-content">
+  <div class="app-header">
+    <h1>Competitory</h1>
+    <p>Tu plataforma de juegos competitivos</p>
+  </div>
 
-        <div *ngIf="usuarioInput.invalid && (usuarioInput.dirty || usuarioInput.touched)">
-          <ion-note color="danger" *ngIf="usuarioInput.errors?.['required']">Campo obligatorio</ion-note>
-          <ion-note color="danger" *ngIf="usuarioInput.errors?.['minlength']">Mínimo 3 caracteres</ion-note>
-          <ion-note color="danger" *ngIf="usuarioInput.errors?.['maxlength']">Máximo 8 caracteres</ion-note>
-          <ion-note color="danger" *ngIf="usuarioInput.errors?.['pattern']">Solo caracteres alfanuméricos</ion-note>
+  <div class="registrar-container">
+    <ion-card class="registrar-card">
+      <ion-card-header>
+        <ion-card-title class="welcome-title">Registrarse</ion-card-title>
+      </ion-card-header>
+      
+      <ion-card-content>
+        <form #loginForm="ngForm" (ngSubmit)="ingresar(loginForm)">
+          <div class="form-group">
+            <ion-item lines="full" class="input-item">
+              <ion-icon slot="start" name="person-outline" color="primary"></ion-icon>
+              <ion-input 
+                type="text" 
+                name="usuario"
+                placeholder="Usuario (3-8 caracteres)"
+                [(ngModel)]="userData.usuario"
+                minlength="3"
+                maxlength="8"
+                pattern="[a-zA-Z0-9]+"
+                required
+                #usuarioInput="ngModel">
+              </ion-input>
+            </ion-item>
+
+            <div *ngIf="usuarioInput.invalid && (usuarioInput.dirty || usuarioInput.touched)" class="validation-errors">
+              <ion-note color="danger" *ngIf="usuarioInput.errors?.['required']">Campo obligatorio</ion-note>
+              <ion-note color="danger" *ngIf="usuarioInput.errors?.['minlength']">Mínimo 3 caracteres</ion-note>
+              <ion-note color="danger" *ngIf="usuarioInput.errors?.['maxlength']">Máximo 8 caracteres</ion-note>
+              <ion-note color="danger" *ngIf="usuarioInput.errors?.['pattern']">Solo caracteres alfanuméricos</ion-note>
+            </div>
+          </div>
+
+          <div class="form-group">
+            <ion-item class="input-item">
+              <ion-input 
+                type="text" 
+                placeholder="Nombre" 
+                name="nombre" 
+                [(ngModel)]="userData.nombre" 
+                #nombreInput="ngModel"
+                 required>
+              </ion-input>
+            </ion-item>
+          </div>
+          
+
+          <div class="form-group">
+            <ion-item class="input-item">
+              <ion-input 
+                type="text" 
+                placeholder="Apellido" 
+                name="apellido" 
+                [(ngModel)]="userData.apellido" 
+                #apellidoInput="ngModel" 
+                required>
+              </ion-input>
+            </ion-item>
+          </div>
+
+          <div class="form-group">
+            <ion-item (click)="abrirSelectorFecha()" class="input-item">
+              <ion-input 
+                [value]="userData.fechaNacimiento | date: 'dd/MM/yyyy'" 
+                readonly 
+                placeholder="Seleccionar fecha"
+                required
+              ></ion-input>
+              <ion-icon slot="end" name="calendar" color="primary" style="margin-right: 10px;"></ion-icon>
+            </ion-item>
+          </div>
+
+          <div class="form-group">
+            <ion-item lines="full" class="input-item">
+              <ion-icon slot="start" name="lock-closed-outline" color="primary"></ion-icon>
+              <ion-input 
+                type="password" 
+                name="password"
+                placeholder="Contraseña (4 dígitos)"
+                [(ngModel)]="userData.password"
+                minlength="4"
+                maxlength="4"
+                pattern="[0-9]+"
+                required
+                #passwordInput="ngModel">
+              </ion-input>
+            </ion-item>
+
+            <div *ngIf="passwordInput.invalid && (passwordInput.dirty || passwordInput.touched)" class="validation-errors">
+              <ion-note color="danger" *ngIf="passwordInput.errors?.['required']">Campo obligatorio</ion-note>
+              <ion-note color="danger" *ngIf="passwordInput.errors?.['minlength'] || passwordInput.errors?.['maxlength']">
+                Debe tener 4 dígitos
+              </ion-note>
+              <ion-note color="danger" *ngIf="passwordInput.errors?.['pattern']">Solo números permitidos</ion-note>
+            </div>
+          </div>
+
+          <div class="button-group">
+            <ion-button 
+              expand="block" 
+              type="submit"
+              [disabled]="!loginForm.valid"
+              class="registrar-button">
+              <ion-icon slot="start" name="log-in-outline"></ion-icon>
+              Ingresar
+            </ion-button>
+          </div>
+        </form>
+
+        <div class="divider">
+          <span>o</span>
         </div>
 
-        <ion-item>
-          <ion-label position="floating">Nombre</ion-label>
-          <ion-input name="nombre" [(ngModel)]="userData.nombre" #nombreInput="ngModel" required></ion-input>
-        </ion-item>
-
-        <ion-item>
-          <ion-label position="floating">Apellido</ion-label>
-          <ion-input name="apellido" [(ngModel)]="userData.apellido" #apellidoInput="ngModel" required></ion-input>
-        </ion-item>
-
-        <ion-item (click)="abrirSelectorFecha()">
-          <ion-label position="floating">Fecha de Nacimiento</ion-label>
-          <ion-input 
-            [value]="userData.fechaNacimiento | date: 'dd/MM/yyyy'" 
-            readonly 
-            placeholder="Seleccionar fecha"
-            required
-          ></ion-input>
-          <ion-icon slot="end" name="calendar" style="margin-right: 10px;"></ion-icon>
-        </ion-item>
-
-        <ion-item lines="full">
-          <ion-label position="floating">Contraseña (4 dígitos)</ion-label>
-          <ion-input 
-            type="password" 
-            name="password"
-            [(ngModel)]="userData.password"
-            minlength="4"
-            maxlength="4"
-            pattern="[0-9]+"
-            required
-            #passwordInput="ngModel">
-          </ion-input>
-        </ion-item>
-
-        <div *ngIf="passwordInput.invalid && (passwordInput.dirty || passwordInput.touched)">
-          <ion-note color="danger" *ngIf="passwordInput.errors?.['required']">Campo obligatorio</ion-note>
-          <ion-note color="danger" *ngIf="passwordInput.errors?.['minlength'] || passwordInput.errors?.['maxlength']">
-            Debe tener 4 dígitos
-          </ion-note>
-          <ion-note color="danger" *ngIf="passwordInput.errors?.['pattern']">Solo números permitidos</ion-note>
-        </div>
-
-        <ion-row>
-        <ion-col>
+        <div class="register-section">
           <ion-button 
-            expand="full" 
-            type="submit"
-            [disabled]="!loginForm.valid">
-            Ingresar
-          </ion-button>
-        </ion-col>
-      </ion-row>
-
-      </form>
-
-      
-      
-
-      <ion-row>
-        <ion-col>
-          <ion-button expand="block" color="medium" (click)="login()">
+            expand="block" 
+            fill="outline" 
+            color="light"
+            (click)="login()"
+            class="register-button">
             Volver al login
           </ion-button>
-        </ion-col>
-      </ion-row>
-
-    </ion-card-content>
-  </ion-card>
+        </div>
+      </ion-card-content>
+    </ion-card>
+  </div>
 
   <ion-modal [isOpen]="fechaModalVisible" (didDismiss)="fechaModalVisible = false">
     <ng-template>

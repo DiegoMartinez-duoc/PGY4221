@@ -2,6 +2,9 @@ import { Component, OnInit } from '@angular/core';
 import { Router, NavigationExtras, ActivatedRoute } from '@angular/router';
 import { Animation, AnimationController, createAnimation } from '@ionic/angular';
 import { trigger, state, style, animate, transition } from '@angular/animations';
+import { ApiService } from '../services/api.service';
+import { DbserviceService } from '../services/dbservice.service';
+import { ToastController } from '@ionic/angular';
 
 @Component({
   selector: 'app-home',
@@ -20,34 +23,59 @@ import { trigger, state, style, animate, transition } from '@angular/animations'
 export class HomePage implements OnInit {
   animationState: string = 'normal';
   userData: any;
+  usuarios: any[] = []; 
+  isLoading = true;
 
-  // Routing utilizado para enviar al login en caso de que no se detecte un usuario
-  constructor(private router: Router, private animationCtrl: AnimationController, private activatedRoute: ActivatedRoute) {
-    const navigation = this.router.getCurrentNavigation();
-    if (navigation?.extras?.state) {
-      this.userData = navigation.extras.state['user'];
-    } else {
+  userImage = 'https://ionicframework.com/docs/img/demos/avatar.svg';
+
+  constructor(
+    private router: Router,
+    private animationCtrl: AnimationController,
+    private apiService: ApiService, 
+    private dbService: DbserviceService,
+    private toastController: ToastController
+  ) {}
+
+  async ngOnInit() {
+    const userDataString = localStorage.getItem('userData');
+    const imageData = localStorage.getItem('profilePicture');
+
+    if (imageData) {
+      this.userImage = imageData;
+    }
+    
+    if (!userDataString) {
+      this.router.navigate(['/login']);
+      return;
+    }
+
+    try {
+      this.userData = JSON.parse(userDataString);
+      this.createCardAnimations();
+      await this.cargarUsuarios();
+    } catch (e) {
       this.router.navigate(['/login']);
     }
   }
 
-  // Carga del usuario a la pagina una vez se entre a esta
-  ngOnInit() {
-    this.activatedRoute.paramMap.subscribe(params => {
-      const navigationState = this.router.getCurrentNavigation()?.extras?.state;
-      if (navigationState && navigationState['user']) {
-        this.userData = navigationState['user'];
-        localStorage.setItem('userData', JSON.stringify(this.userData));
-      } else {
-        const savedUser = localStorage.getItem('userData');
-        if (savedUser) {
-          this.userData = JSON.parse(savedUser);
-        }
-      }
-    });
+  async cargarUsuarios() {
+    this.isLoading = true;
     
-    // Ejecucion de animaciones
-    this.createCardAnimations();
+    try {
+      this.apiService.getUsers().subscribe({
+        next: (users) => {
+          this.usuarios = users;
+          this.isLoading = false;
+        },
+        error: () => {
+          this.isLoading = false;
+          this.presentToast('Error cargando usuarios');
+        }
+      });
+    } catch (error) {
+      this.isLoading = false;
+      this.presentToast('Error inesperado: ' + error);
+    }
   }
 
   private createCardAnimations() {
@@ -101,5 +129,21 @@ export class HomePage implements OnInit {
       this.animationState = 'normal';
       this.router.navigate(['/clasificacion'], navigationExtras);
     }, 150);
+  }
+
+  async presentToast(message: string) {
+    const toast = await this.toastController.create({
+      message: message,
+      duration: 2000,
+      position: 'bottom'
+    });
+    toast.present();
+  }
+
+  getBadgeColor(position: number): string {
+    if (position === 0) return 'warning'; // Oro
+    if (position === 1) return 'medium';  // Plata
+    if (position === 2) return 'tertiary'; // Bronce
+    return 'light'; // Otros puestos
   }
 }

@@ -8,10 +8,19 @@ import { IonicModule, IonicRouteStrategy } from '@ionic/angular';
 import { AppComponent } from './app.component';
 import { AppRoutingModule } from './app-routing.module';
 
+import { SQLite } from '@awesome-cordova-plugins/sqlite/ngx';
+
+import { HttpClientModule } from '@angular/common/http';
+
+import { AuthGuard } from './guards/auth.guard';
+import { ApiService } from './services/api.service';
+import { CameraService } from './camera.service';
+// import { NetworkService } from './services/network.service';
+
 @NgModule({
   declarations: [AppComponent],
-  imports: [BrowserModule, IonicModule.forRoot(), AppRoutingModule, BrowserAnimationsModule],
-  providers: [{ provide: RouteReuseStrategy, useClass: IonicRouteStrategy }],
+  imports: [BrowserModule, HttpClientModule, IonicModule.forRoot(), AppRoutingModule, BrowserAnimationsModule],
+  providers: [{ provide: RouteReuseStrategy, useClass: IonicRouteStrategy }, SQLite, AuthGuard, ApiService, CameraService],
   bootstrap: [AppComponent],
 })
 export class AppModule {}

@@ -1,81 +1,104 @@
 <ion-header [translucent]="true">
-  <ion-toolbar color="primary">
-    <ion-title>Login</ion-title>
+  <ion-toolbar color="dark">
+    <ion-title></ion-title>
   </ion-toolbar>
 </ion-header>
 
-<ion-content [fullscreen]="true">
-  <ion-card>
-    <ion-card-header>
-      <ion-title>Bienvenido!</ion-title>
-    </ion-card-header>
-    <ion-card-content>
-      <!-- Formulario de Login con ingreso y verificacion de Nombre de usuario y Contrasena -->
-      <form #loginForm="ngForm" (ngSubmit)="ingresar(loginForm)">
-        
-        <ion-item lines="full">
-          <ion-label position="floating">Usuario (3-8 caracteres)</ion-label>
-          <ion-input 
-            type="text" 
-            name="usuario"
-            [(ngModel)]="userData.usuario"
-            minlength="3"
-            maxlength="8"
-            pattern="[a-zA-Z0-9]+"
-            required
-            #usuarioInput="ngModel">
-          </ion-input>
-        </ion-item>
+<ion-content [fullscreen]="true" class="login-content">
+  <div class="app-header">
+    <h1>Competitory</h1>
+    <p>Tu plataforma de juegos competitivos</p>
+  </div>
 
-        <div *ngIf="usuarioInput.invalid && (usuarioInput.dirty || usuarioInput.touched)">
-          <ion-note color="danger" *ngIf="usuarioInput.errors?.['required']">Campo obligatorio</ion-note>
-          <ion-note color="danger" *ngIf="usuarioInput.errors?.['minlength']">Mínimo 3 caracteres</ion-note>
-          <ion-note color="danger" *ngIf="usuarioInput.errors?.['maxlength']">Máximo 8 caracteres</ion-note>
-          <ion-note color="danger" *ngIf="usuarioInput.errors?.['pattern']">Solo caracteres alfanuméricos</ion-note>
-        </div>
+  <div class="login-container">
+    <ion-card class="login-card">
+      <ion-card-header>
+        <ion-card-title class="welcome-title">Bienvenido de vuelta!</ion-card-title>
+      </ion-card-header>
+      
+      <ion-card-content>
+        <form #loginForm="ngForm" (ngSubmit)="ingresar(loginForm)">
+          <div class="form-group">
+            <ion-item lines="full" class="input-item">
+              <ion-icon slot="start" name="person-outline" color="primary"></ion-icon>
+              <ion-input 
+                type="text" 
+                name="usuario"
+                placeholder="Usuario (3-8 caracteres)"
+                [(ngModel)]="userData.usuario"
+                minlength="3"
+                maxlength="8"
+                pattern="[a-zA-Z0-9]+"
+                required
+                #usuarioInput="ngModel">
+              </ion-input>
+            </ion-item>
 
-        <ion-item lines="full">
-          <ion-label position="floating">Contraseña (4 dígitos)</ion-label>
-          <ion-input 
-            type="password" 
-            name="password"
-            [(ngModel)]="userData.password"
-            minlength="4"
-            maxlength="4"
-            pattern="[0-9]+"
-            required
-            #passwordInput="ngModel">
-          </ion-input>
-        </ion-item>
+            <div *ngIf="usuarioInput.invalid && (usuarioInput.dirty || usuarioInput.touched)" class="validation-errors">
+              <ion-note color="danger" *ngIf="usuarioInput.errors?.['required']">Campo obligatorio</ion-note>
+              <ion-note color="danger" *ngIf="usuarioInput.errors?.['minlength']">Mínimo 3 caracteres</ion-note>
+              <ion-note color="danger" *ngIf="usuarioInput.errors?.['maxlength']">Máximo 8 caracteres</ion-note>
+              <ion-note color="danger" *ngIf="usuarioInput.errors?.['pattern']">Solo caracteres alfanuméricos</ion-note>
+            </div>
+          </div>
 
-        <div *ngIf="passwordInput.invalid && (passwordInput.dirty || passwordInput.touched)">
-          <ion-note color="danger" *ngIf="passwordInput.errors?.['required']">Campo obligatorio</ion-note>
-          <ion-note color="danger" *ngIf="passwordInput.errors?.['minlength'] || passwordInput.errors?.['maxlength']">
-            Debe tener 4 dígitos
-          </ion-note>
-          <ion-note color="danger" *ngIf="passwordInput.errors?.['pattern']">Solo números permitidos</ion-note>
-        </div>
+          <div class="form-group">
+            <ion-item lines="full" class="input-item">
+              <ion-icon slot="start" name="lock-closed-outline" color="primary"></ion-icon>
+              <ion-input 
+                type="password" 
+                name="password"
+                placeholder="Contraseña (4 dígitos)"
+                [(ngModel)]="userData.password"
+                minlength="4"
+                maxlength="4"
+                pattern="[0-9]+"
+                required
+                #passwordInput="ngModel">
+              </ion-input>
+            </ion-item>
 
-        <ion-row>
-          <ion-col>
+            <div *ngIf="passwordInput.invalid && (passwordInput.dirty || passwordInput.touched)" class="validation-errors">
+              <ion-note color="danger" *ngIf="passwordInput.errors?.['required']">Campo obligatorio</ion-note>
+              <ion-note color="danger" *ngIf="passwordInput.errors?.['minlength'] || passwordInput.errors?.['maxlength']">
+                Debe tener 4 dígitos
+              </ion-note>
+              <ion-note color="danger" *ngIf="passwordInput.errors?.['pattern']">Solo números permitidos</ion-note>
+            </div>
+          </div>
+
+          <div class="button-group">
             <ion-button 
-              expand="full" 
+              expand="block" 
               type="submit"
-              [disabled]="!loginForm.valid">
+              [disabled]="!loginForm.valid"
+              class="login-button">
+              <ion-icon slot="start" name="log-in-outline"></ion-icon>
               Ingresar
             </ion-button>
-          </ion-col>
-        </ion-row>
-      </form>
+          </div>
+        </form>
 
-      <ion-col>
-        <ion-button expand="block" color="medium" (click)="registrar()">
-          ¿No tienes una cuenta? Registrate aqui
-        </ion-button>
-      </ion-col>
+        <div class="divider">
+          <span>o</span>
+        </div>
 
+        <div class="register-section">
+          <p>¿No tienes una cuenta?</p>
+          <ion-button 
+            expand="block" 
+            fill="outline" 
+            color="light"
+            (click)="registrar()"
+            class="register-button">
+            Regístrate aquí
+          </ion-button>
+        </div>
+      </ion-card-content>
+    </ion-card>
+  </div>
 
-
-    </ion-card-content>
-  </ion-card>
+  <div class="footer">
+    <p>© 2025 Competitory - Todos los derechos reservados</p>
+  </div>
 </ion-content>
