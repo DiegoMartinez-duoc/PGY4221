@@ -25,6 +25,8 @@ export class HomePage implements OnInit {
   userData: any;
   usuarios: any[] = []; 
   isLoading = true;
+  errorMessage = '';
+  dataSource = '';
 
   userImage = 'https://ionicframework.com/docs/img/demos/avatar.svg';
 
@@ -63,20 +65,64 @@ export class HomePage implements OnInit {
     
     try {
       this.apiService.getUsers().subscribe({
-        next: (users) => {
-          this.usuarios = users;
+        next: (response) => {
+          this.usuarios = response.data;
+          this.dataSource = response.source;
+          this.errorMessage = response.error || '';
+          
+          if (response.source === 'cache') {
+            this.showCacheMessage(response.error);
+          }
+          
           this.isLoading = false;
+          
         },
-        error: () => {
+        error: async (error) => {
+          console.error('Error:', error);
           this.isLoading = false;
-          this.presentToast('Error cargando usuarios');
+          
+          this.presentToast('Error al cargar los datos', 'danger');
         }
       });
     } catch (error) {
       this.isLoading = false;
-      this.presentToast('Error inesperado: ' + error);
+      
+      this.presentToast('Error inesperado', 'danger');
     }
   }
+
+  private async showCacheMessage(error: string) {
+    let message = 'Mostrando datos almacenados localmente';
+    
+    if (error) {
+      message += ` (${error})`;
+    }
+    
+    const toast = await this.toastController.create({
+      message,
+      duration: 3000,
+      color: 'warning',
+      position: 'top'
+    });
+    toast.present();
+  }
+
+  
+  async recargarUsuarios() {
+    this.isLoading = true;
+    await this.cargarUsuarios();
+  }
+
+  async presentToast(message: string, color: string = 'danger') {
+    const toast = await this.toastController.create({
+      message,
+      duration: 3000,
+      color: color,
+      position: 'top'
+    });
+    toast.present();
+  }
+
 
   private createCardAnimations() {
 
@@ -129,15 +175,6 @@ export class HomePage implements OnInit {
       this.animationState = 'normal';
       this.router.navigate(['/clasificacion'], navigationExtras);
     }, 150);
-  }
-
-  async presentToast(message: string) {
-    const toast = await this.toastController.create({
-      message: message,
-      duration: 2000,
-      position: 'bottom'
-    });
-    toast.present();
   }
 
   getBadgeColor(position: number): string {

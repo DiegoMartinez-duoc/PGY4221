@@ -15,12 +15,12 @@ import { HttpClientModule } from '@angular/common/http';
 import { AuthGuard } from './guards/auth.guard';
 import { ApiService } from './services/api.service';
 import { CameraService } from './camera.service';
-// import { NetworkService } from './services/network.service';
+import { NetworkService } from './services/network.service';
 
 @NgModule({
   declarations: [AppComponent],
   imports: [BrowserModule, HttpClientModule, IonicModule.forRoot(), AppRoutingModule, BrowserAnimationsModule],
-  providers: [{ provide: RouteReuseStrategy, useClass: IonicRouteStrategy }, SQLite, AuthGuard, ApiService, CameraService],
+  providers: [{ provide: RouteReuseStrategy, useClass: IonicRouteStrategy }, SQLite, AuthGuard, ApiService, CameraService, NetworkService],
   bootstrap: [AppComponent],
 })
 export class AppModule {}

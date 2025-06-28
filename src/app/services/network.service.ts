@@ -24,4 +24,8 @@ export class NetworkService {
   get isOnline() {
     return this.onlineStatus.asObservable();
   }
+
+  checkConnection(): Promise<boolean> {
+    return Network.getStatus().then(status => status.connected);
+  }
 }

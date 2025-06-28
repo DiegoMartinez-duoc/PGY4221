@@ -1,7 +1,7 @@
 import { Injectable } from '@angular/core';
-import { HttpClient } from '@angular/common/http';
-import { from, Observable, of } from 'rxjs';
-import { map, catchError, switchMap } from 'rxjs/operators';
+import { HttpClient, HttpErrorResponse } from '@angular/common/http';
+import { from, Observable, throwError } from 'rxjs';
+import { catchError, map, switchMap } from 'rxjs/operators';
 import { DbserviceService } from './dbservice.service';
 import { NetworkService } from './network.service';
 
@@ -17,22 +17,54 @@ export class ApiService {
     private networkService: NetworkService
   ) {}
 
-  getUsers(): Observable<any[]> {
+  getUsers(): Observable<any> {
+    // Verificar si hay conexión a internet
     return this.networkService.isOnline.pipe(
       switchMap(online => {
         if (online) {
           return this.http.get<any[]>(`${this.apiUrl}/users`).pipe(
-            map(users => {
-              this.dbService.guardarUsuarios(users);
-              return users;
+            map(response => {
+              // Guardar en la base de datos local
+              this.dbService.guardarUsuarios(response);
+              return { data: response, source: 'api', error: null };
             }),
-            catchError(() => from(this.dbService.getUsers()))
+            catchError((error: HttpErrorResponse) => {
+              // Manejar errores específicos (404, etc.)
+              return this.handleApiError(error);
+            })
           );
         } else {
-          return from(this.dbService.getUsers());
+          // Sin conexión - cargar desde base de datos local
+          return from(this.handleOffline()).pipe(
+            map(data => ({ data, source: 'cache', error: null }))
+          );
         }
-      }),
-      catchError(() => from(this.dbService.getUsers()))
+      })
     );
+  }
+
+  private handleApiError(error: HttpErrorResponse): Observable<any> {
+    console.error('Error en API:', error);
+    
+    // Manejar error 404 específicamente
+    if (error.status === 404) {
+      return from(this.handleOffline()).pipe(
+        map(data => ({ data, source: 'cache', error: '404 - Recurso no encontrado' }))
+      );
+    }
+    
+    // Para otros errores, intentar cargar desde caché
+    return from(this.handleOffline()).pipe(
+      map(data => ({ data, source: 'cache', error: `Error ${error.status}` }))
+    );
+  }
+
+  private async handleOffline(): Promise<any[]> {
+    try {
+      return await this.dbService.getUsers();
+    } catch (e) {
+      console.error('Error cargando datos locales:', e);
+      return [];
+    }
   }
 }

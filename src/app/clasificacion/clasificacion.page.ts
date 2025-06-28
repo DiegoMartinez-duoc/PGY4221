@@ -3,7 +3,7 @@ import { Router } from '@angular/router';
 import { AlertController } from '@ionic/angular';
 import { ApiService } from '../services/api.service';
 import { DbserviceService } from '../services/dbservice.service';
-import { ToastController } from '@ionic/angular';
+import { ToastController, LoadingController } from '@ionic/angular';
 
 @Component({
   selector: 'app-clasificacion',
@@ -17,13 +17,16 @@ export class ClasificacionPage implements OnInit {
   usuarios: any[] = []; 
   isLoading = true;
   userImage = 'https://ionicframework.com/docs/img/demos/avatar.svg';
+  errorMessage = '';
+  dataSource = '';
 
   constructor(
     private router: Router,
     private alertController: AlertController,
     private apiService: ApiService, 
     private dbService: DbserviceService,
-    private toastController: ToastController
+    private toastController: ToastController,
+    private loadingController: LoadingController
   ) {}
 
   async ngOnInit() {
@@ -47,19 +50,46 @@ export class ClasificacionPage implements OnInit {
     
     try {
       this.apiService.getUsers().subscribe({
-        next: (users) => {
-          this.usuarios = users;
+        next: (response) => {
+          this.usuarios = response.data;
+          this.dataSource = response.source;
+          this.errorMessage = response.error || '';
+          
+          if (response.source === 'cache') {
+            this.showCacheMessage(response.error);
+          }
+          
           this.isLoading = false;
+          
         },
-        error: () => {
+        error: async (error) => {
+          console.error('Error:', error);
           this.isLoading = false;
-          this.presentToast('Error cargando usuarios');
+          
+          this.presentToast('Error al cargar los datos', 'danger');
         }
       });
     } catch (error) {
       this.isLoading = false;
-      this.presentToast('Error inesperado: ' + error);
+      
+      this.presentToast('Error inesperado', 'danger');
     }
+  }
+
+  private async showCacheMessage(error: string) {
+    let message = 'Mostrando datos almacenados localmente';
+    
+    if (error) {
+      message += ` (${error})`;
+    }
+    
+    const toast = await this.toastController.create({
+      message,
+      duration: 3000,
+      color: 'warning',
+      position: 'top'
+    });
+    toast.present();
   }
 
   
@@ -68,11 +98,12 @@ export class ClasificacionPage implements OnInit {
     await this.cargarUsuarios();
   }
 
-  async presentToast(message: string) {
+  async presentToast(message: string, color: string = 'danger') {
     const toast = await this.toastController.create({
-      message: message,
-      duration: 2000,
-      position: 'bottom'
+      message,
+      duration: 3000,
+      color: color,
+      position: 'top'
     });
     toast.present();
   }

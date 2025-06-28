@@ -16,6 +16,18 @@
 </ion-header>
 
 <ion-content [fullscreen]="true" class="clasificacion-content">
+  <ion-card *ngIf="dataSource === 'cache'" color="warning">
+    <ion-card-content class="ion-text-center">
+      <ion-icon name="warning" size="large"></ion-icon>
+      <ion-text>
+        <p>Mostrando datos almacenados localmente</p>
+        <p *ngIf="errorMessage">{{errorMessage}}</p>
+      </ion-text>
+    </ion-card-content>
+  </ion-card>
+
+
+
   <ion-card color="dark">
     <ion-card-header>
       <ion-card-title class="ranking-title">
