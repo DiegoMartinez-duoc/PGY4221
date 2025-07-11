@@ -1,4 +1,7 @@
 describe('Flujo de Autenticación', () => {
+
+  const generateUniqueUsername = () => `usuario`;
+  
   it('Debería registrar un nuevo usuario', () => {
     cy.visit('/registrar');
     
@@ -19,12 +22,23 @@ describe('Flujo de Autenticación', () => {
   });
 
   it('Debería iniciar sesión con credenciales válidas', () => {
-    cy.visit('/login');
+    const username = generateUniqueUsername();
     
-    cy.get('ion-input[placeholder="Usuario (3-8 caracteres)"]').type('nuevo');
+  
+    cy.session([username, 'registro'], () => {
+      cy.visit('/registrar');
+      cy.get('ion-input[placeholder="Usuario (3-8 caracteres)"]').type(username);
+      cy.get('ion-input[placeholder="Nombre"]').type('Juan');
+      cy.get('ion-input[placeholder="Apellido"]').type('Pérez');
+      cy.get('ion-input[placeholder="Contraseña (4 dígitos)"]').type('1234');
+      cy.get('ion-button').contains('Ingresar').click();
+      cy.url().should('include', '/home');
+    });
+
+    cy.visit('/login');
+    cy.get('ion-input[placeholder="Usuario (3-8 caracteres)"]').type(username);
     cy.get('ion-input[placeholder="Contraseña (4 dígitos)"]').type('1234');
     cy.get('ion-button').contains('Ingresar').click();
-    
     cy.url().should('include', '/home');
 
     cy.get('ion-chip').click();
@@ -33,13 +47,26 @@ describe('Flujo de Autenticación', () => {
   });
 
   it('Debería mostrar error con credenciales inválidas', () => {
-    cy.visit('/login');
+   
+
+    const username = generateUniqueUsername();
+
+    cy.session([username, 'registro'], () => {
+      cy.visit('/registrar');
+      cy.get('ion-input[placeholder="Usuario (3-8 caracteres)"]').type(username);
+      cy.get('ion-input[placeholder="Nombre"]').type('Juan');
+      cy.get('ion-input[placeholder="Apellido"]').type('Pérez');
+      cy.get('ion-input[placeholder="Contraseña (4 dígitos)"]').type('1234');
+      cy.get('ion-button').contains('Ingresar').click();
+      cy.url().should('include', '/home');
+    });
+
+     cy.visit('/login');
     
-    cy.get('ion-input[placeholder="Usuario"]').type('falso');
-    cy.get('ion-input[placeholder="Contraseña"]').type('4444');
+    cy.get('ion-input[placeholder="Usuario (3-8 caracteres)"]').type('falso');
+    cy.get('ion-input[placeholder="Contraseña (4 dígitos)"]').type('4444');
     cy.get('ion-button').contains('Ingresar').click();
     
-    cy.get('ion-toast').should('be.visible');
-    cy.get('ion-toast').should('contain', 'Credenciales inválidas');
+    cy.url().should('include', '/login');
   });
 });

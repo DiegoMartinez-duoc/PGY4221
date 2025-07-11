@@ -48,7 +48,7 @@ export class LoginPage implements OnInit {
               this.presentToast('Contraseña incorrecta');
             }
           } else {
-            this.presentToast(storedData.usuario);
+            this.presentToast('Credenciales inválidas');
           }
         } catch (error) {
           this.presentToast('Credenciales inválidas');
