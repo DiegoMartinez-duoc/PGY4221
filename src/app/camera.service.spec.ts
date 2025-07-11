@@ -1,16 +1,18 @@
-import { TestBed } from '@angular/core/testing';
-
 import { CameraService } from './camera.service';
+import { Camera } from '@capacitor/camera';
 
 describe('CameraService', () => {
   let service: CameraService;
 
   beforeEach(() => {
-    TestBed.configureTestingModule({});
-    service = TestBed.inject(CameraService);
+    service = new CameraService();
+    spyOn(Camera, 'getPhoto').and.resolveTo({ dataUrl: 'data:image' } as any);
   });
 
-  it('should be created', () => {
+  it('es creado', () => {
     expect(service).toBeTruthy();
   });
 });
+
+
+

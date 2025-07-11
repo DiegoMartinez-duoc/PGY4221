@@ -1,0 +1,46 @@
+<ion-header [translucent]="true">
+  <ion-toolbar color="dark">
+    <ion-buttons slot="start">
+      <ion-back-button defaultHref="/home"></ion-back-button>
+    </ion-buttons>
+    <ion-title>Pong</ion-title>
+    <ion-buttons slot="end">
+      <ion-chip color="secondary" class="ion-margin-end">
+        <ion-avatar>
+          <img src="https://ionicframework.com/docs/img/demos/avatar.svg">
+        </ion-avatar>
+        <ion-label class="user">OtroUsuario</ion-label>
+      </ion-chip>
+    </ion-buttons>
+  </ion-toolbar>
+</ion-header>
+
+<ion-content [fullscreen]="true" class="pong-container">
+  <div class="rival-paddle">
+    <div class="paddle"></div>
+  </div>
+  
+  <div class="ball-container">
+    <div class="ball"></div>
+  </div>
+  
+  <div class="player-paddle">
+    <div class="paddle"></div>
+  </div>
+  
+  <div class="score-board">
+    <div class="score rival-score">0</div>
+    <div class="score-divider">:</div>
+    <div class="score player-score">0</div>
+  </div>
+  
+  <div class="game-message">
+    <ion-text color="light">
+      <h2>¿Listo para jugar?</h2>
+    </ion-text>
+    <ion-button color="white" fill="outline" (click)="startGame()">
+      <ion-icon slot="start" name="play"></ion-icon>
+      Iniciar Partida
+    </ion-button>
+  </div>
+</ion-content>

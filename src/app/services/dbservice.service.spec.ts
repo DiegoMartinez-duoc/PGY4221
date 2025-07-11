@@ -1,12 +1,17 @@
 import { TestBed } from '@angular/core/testing';
-
+import { SQLite, SQLiteObject } from '@awesome-cordova-plugins/sqlite/ngx';
+import { ToastController } from '@ionic/angular';
+import { BehaviorSubject } from 'rxjs';
 import { DbserviceService } from './dbservice.service';
+import { Platform } from '@ionic/angular';
 
 describe('DbserviceService', () => {
   let service: DbserviceService;
 
   beforeEach(() => {
-    TestBed.configureTestingModule({});
+    TestBed.configureTestingModule({
+      providers: [SQLite, SQLiteObject, ToastController, BehaviorSubject, Platform],
+    });
     service = TestBed.inject(DbserviceService);
   });
 

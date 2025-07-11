@@ -3,6 +3,7 @@ import { Router, NavigationExtras, ActivatedRoute } from '@angular/router';
 import { Animation, AnimationController, createAnimation } from '@ionic/angular';
 import { trigger, state, style, animate, transition } from '@angular/animations';
 import { CameraService } from '../camera.service';
+import { Platform } from '@ionic/angular';
 
 
 
@@ -16,9 +17,11 @@ export class PerfilPage implements OnInit {
 
   userData: any;
   userImage = 'https://ionicframework.com/docs/img/demos/avatar.svg';
+  private isNativePlatform: boolean = false;
 
-  constructor(private cameraService: CameraService, private router: Router, private animationCtrl: AnimationController, private activatedRoute: ActivatedRoute) {
+  constructor(private cameraService: CameraService, private router: Router, private activatedRoute: ActivatedRoute, private platform: Platform) {
     const navigation = this.router.getCurrentNavigation();
+    this.isNativePlatform = this.platform.is('cordova') || this.platform.is('capacitor');
     if (navigation?.extras?.state) {
       this.userData = navigation.extras.state['user'];
     } else {
@@ -36,8 +39,13 @@ export class PerfilPage implements OnInit {
   }
 
   cerrarSesion() {
-    localStorage.removeItem('userData');
-    this.router.navigate(['/login']);
+    if (!this.isNativePlatform) {
+      this.router.navigate(['/login']);
+    } else {
+      localStorage.removeItem('userData');
+      this.router.navigate(['/login']);
+    }
+    
   }
 
   saveProfilePicture() {

@@ -1,0 +1,69 @@
+<ion-header [translucent]="true">
+  <ion-toolbar color="dark">
+    <ion-buttons slot="start">
+      <ion-back-button defaultHref="/home"></ion-back-button>
+    </ion-buttons>
+    <ion-title>Clasificación</ion-title>
+    <ion-buttons slot="end">
+      <ion-chip color="secondary" class="ion-margin-end">
+        <ion-avatar>
+          <img [src]="userImage">
+        </ion-avatar>
+        <ion-label class="user">{{userData.usuario}}</ion-label>
+      </ion-chip>
+    </ion-buttons>
+  </ion-toolbar>
+</ion-header>
+
+<ion-content [fullscreen]="true" class="clasificacion-content">
+  <ion-card *ngIf="dataSource === 'cache'" color="warning">
+    <ion-card-content class="ion-text-center">
+      <ion-icon name="warning" size="large"></ion-icon>
+      <ion-text>
+        <p>Mostrando datos almacenados localmente</p>
+        <p *ngIf="errorMessage">{{errorMessage}}</p>
+      </ion-text>
+    </ion-card-content>
+  </ion-card>
+
+
+
+  <ion-card color="dark">
+    <ion-card-header>
+      <ion-card-title class="ranking-title">
+        <ion-icon name="podium-outline" size="large"></ion-icon>
+        CLASIFICACIÓN
+      </ion-card-title>
+    </ion-card-header>
+    
+    <ion-card-content>
+      <div *ngIf="isLoading" class="ion-text-center ion-padding">
+        <ion-spinner name="crescent"></ion-spinner>
+        <p>Cargando usuarios...</p>
+      </div>
+
+      <div *ngIf="!isLoading" class="ranking">
+        <ion-list lines="none">
+          <ion-item class="ranking-item" *ngFor="let usuario of usuarios; let i = index">
+            <ion-avatar slot="start">
+              <img src="https://ionicframework.com/docs/img/demos/avatar.svg">
+            </ion-avatar>
+            <ion-label class="ranking-user">
+              {{ usuario.usuario || usuario.username }}
+            </ion-label>
+            <ion-badge [color]="getBadgeColor(i)">{{ i + 1 }}°</ion-badge>
+          </ion-item>
+        </ion-list>
+      </div>
+
+      <ion-button 
+        class="cargar" 
+        fill="outline"
+        (click)="recargarUsuarios()"
+        [disabled]="isLoading">
+        <ion-icon slot="start" name="reload-outline"></ion-icon>
+        {{ isLoading ? 'Cargando...' : 'Cargar más resultados' }}
+      </ion-button>
+    </ion-card-content>
+  </ion-card>
+</ion-content>

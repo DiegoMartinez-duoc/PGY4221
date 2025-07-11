@@ -1,0 +1,94 @@
+<ion-header [translucent]="true">
+  <ion-toolbar color="dark">
+    <ion-buttons slot="start">
+      <ion-title>Competitory</ion-title>
+    </ion-buttons>
+    
+    <ion-buttons slot="end">
+      <ion-chip 
+        button
+        color="dark" 
+        class="ion-margin-end profile-chip"
+        (click)="goToProfile()">
+        <ion-avatar>
+          <img [src]="userImage">
+        </ion-avatar>
+        <ion-label class="user">{{userData.usuario}}</ion-label>
+      </ion-chip>
+    </ion-buttons>
+  </ion-toolbar>
+</ion-header>
+
+<ion-content [fullscreen]="true" class="home-content">
+  <div class="welcome-section">
+    <h1>¡Hola, {{userData.usuario}}!</h1>
+    <p>¿Qué quieres hacer hoy?</p>
+  </div>
+
+  <div class="games-container">
+    <ion-card 
+      button 
+      class="game-card"
+      (click)="goToPong()"
+      [@bounceAnimation]="animationState">
+      <div class="card-header">
+        <ion-icon name="game-controller-outline" size="large"></ion-icon>
+        <ion-card-title>PONG</ion-card-title>
+      </div>
+      
+      <ion-card-content>
+        <div class="game-preview">
+          <div class="pong-table">
+            <div class="paddle left"></div>
+            <div class="ball"></div>
+            <div class="paddle right"></div>
+          </div>
+        </div>
+        <ion-note>Juega al clásico juego de Pong</ion-note>
+      </ion-card-content>
+    </ion-card>
+
+    <ion-card *ngIf="dataSource === 'cache'" color="warning">
+    <ion-card-content class="ion-text-center">
+      <ion-icon name="warning" size="large"></ion-icon>
+      <ion-text>
+        <p>Mostrando datos almacenados localmente</p>
+        <p *ngIf="errorMessage">{{errorMessage}}</p>
+      </ion-text>
+    </ion-card-content>
+  </ion-card>
+
+    <ion-card 
+      button 
+      class="game-card"
+      (click)="goToClasificacion()"
+      [@bounceAnimation]="animationState">
+      <div class="card-header">
+        <ion-icon name="podium-outline" size="large"></ion-icon>
+        <ion-card-title>CLASIFICACIÓN</ion-card-title>
+      </div>
+      
+      <ion-card-content>
+        <div *ngIf="isLoading" class="ion-text-center ion-padding">
+          <ion-spinner name="crescent"></ion-spinner>
+          <p>Cargando usuarios...</p>
+        </div>
+
+        <div class="ranking-preview">
+          <ion-list class="ranking-list" lines="none">
+            <ion-item  class="ranking-item" *ngFor="let usuario of usuarios | slice:0:3; let i = index">
+              <ion-avatar slot="start">
+                <img src="https://ionicframework.com/docs/img/demos/avatar.svg">
+              </ion-avatar>
+              <ion-label class="ranking-user">
+                {{ usuario.usuario || usuario.username }}
+              </ion-label>
+              <ion-badge [color]="getBadgeColor(i)">{{ i + 1 }}°</ion-badge>
+            </ion-item>
+          </ion-list>
+        </div>
+        <ion-note>Consulta el ranking de jugadores</ion-note>
+      </ion-card-content>
+    </ion-card>
+  </div>
+</ion-content>

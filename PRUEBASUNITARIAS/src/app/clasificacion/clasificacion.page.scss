@@ -1,0 +1,83 @@
+.clasificacion-content {
+  --background: #000000; 
+}
+
+.user {
+    color: white;
+}
+
+// .ranking {
+//   overflow-y: hidden;
+//   border-radius: 8px;
+//   background: var(--ion-color-light);
+//   padding: 10px;
+// }
+
+.ranking {
+  overflow-y: hidden;
+  border-radius: 8px;
+  background: rgba(50, 50, 50, 0.5);
+  padding: 10px;
+  
+  ion-list {
+    background: transparent;
+    
+    ion-item {
+      --background: transparent;
+      --border-color: transparent;
+      background: transparent;
+      color: white;
+      
+      ion-avatar {
+        --border-radius: 50%;
+        overflow: hidden;
+      }
+      
+      ion-label {
+        color: white;
+        font-size: 1rem;
+      }
+      
+      ion-badge {
+        --background: var(--ion-color-primary);
+        --color: white;
+        font-weight: bold;
+      }
+    }
+  }
+}
+
+.ranking-title {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 10px;
+  color: var(--ion-color-primary);
+  font-size: 1.5rem;
+}
+
+.ranking-item {
+  background: #000000;
+}
+
+.ranking-user {
+  color: white;
+}
+
+.cargar {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  color: white;
+  gap: 10px;
+  --background: linear-gradient(135deg, #4e54c8, #8f94fb);
+  --border-radius: 10px;
+  --box-shadow: 0 4px 15px rgba(78, 84, 200, 0.4);
+  height: 50px;
+  font-weight: 600;
+  transition: transform 0.2s ease, box-shadow 0.2s ease;
+  
+  &:active {
+    transform: scale(0.98);
+  }
+}

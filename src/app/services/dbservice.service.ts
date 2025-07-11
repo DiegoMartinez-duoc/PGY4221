@@ -2,60 +2,97 @@ import { Injectable } from '@angular/core';
 import { SQLite, SQLiteObject } from '@awesome-cordova-plugins/sqlite/ngx';
 import { ToastController } from '@ionic/angular';
 import { BehaviorSubject } from 'rxjs';
+import { Platform } from '@ionic/angular';
 
 @Injectable({
   providedIn: 'root'
 })
 export class DbserviceService {
 
-  public db !: SQLiteObject;
+  public db !: SQLiteObject | any;
   private isDbReady: BehaviorSubject<boolean> = new BehaviorSubject(false);
+  private isNativePlatform: boolean = false;
 
-  constructor(private sqlite: SQLite, private toastController: ToastController) {
+  constructor(private sqlite: SQLite, private toastController: ToastController, private platform: Platform) {
+    this.isNativePlatform = this.platform.is('cordova') || this.platform.is('capacitor');
     this.initDatabase();
   }
 
-  private initDatabase() {
-    if (!this.isDbReady.value) {
-      this.sqlite.create({
-        name: 'mydatabase.db',
-        location: 'default'
-      }).then((db: SQLiteObject) => {
+  private async initDatabase() {
+    if (this.isNativePlatform) {
+      // Entorno nativo (móvil)
+      try {
+        const db = await this.sqlite.create({
+          name: 'mydatabase.db',
+          location: 'default'
+        });
         this.db = db;
-        this.createTables();
+        await this.createTables();
         this.isDbReady.next(true);
-        this.presentToast('Base de datos y tablas creadas con exito');
-      })
-      .catch(error => console.error(error));
+      } catch (error) {
+        console.error('Error al crear la base de datos nativa', error);
+        this.isDbReady.next(false);
+      }
+    } else {
+      // Entorno web
+      try {
+        // Usamos IndexedDB como alternativa para web
+        await this.initWebDatabase();
+        await this.createTables();
+        this.isDbReady.next(true);
+      } catch (error) {
+        console.error('Error al crear la base de datos web', error);
+        this.isDbReady.next(false);
+      }
     }
-
-    
   }
 
-  private createTables() {
-    this.db.executeSql(`
+  private async initWebDatabase(): Promise<void> {
+    // Implementación simulada para web
+    return new Promise((resolve) => {
+      this.db = {
+        executeSql: (sql: string, params: any[]) => {
+          console.log('[Web DB] Ejecutando:', sql, params);
+          return Promise.resolve({
+            rows: {
+              length: 0,
+              item: () => null
+            }
+          });
+        }
+      };
+      resolve();
+    });
+  }
+
+  private async createTables() {
+    const createTableQuery = `
       CREATE TABLE IF NOT EXISTS usuarios (
-      id INTEGER PRIMARY KEY AUTOINCREMENT,
-      usuario TEXT,
-      nombre TEXT,
-      apellido TEXT,
-      fechaNacimiento TEXT,
-      password TEXT
-      )`, [])
-    .then(() => this.presentToast('TableCreated'))
-    .catch(error => this.presentToast('Error creating table' + error));
+        id INTEGER PRIMARY KEY AUTOINCREMENT,
+        usuario TEXT,
+        nombre TEXT,
+        apellido TEXT,
+        fechaNacimiento TEXT,
+        password TEXT
+      )`;
+    
+    try {
+      await this.db.executeSql(createTableQuery, []);
+    } catch (error) {
+      console.error('Error creando tabla', error);
+    }
   }
 
   validarUsuario (usuario: string, password: string) {
     return this.db.executeSql(`SELECT * FROM usuarios WHERE usuario = ? AND password = ?`, [usuario, password])
-      .then((res) => {
+      .then((res: { rows: { length: number; item: (arg0: number) => any; }; }) => {
         if (res.rows.length > 0) {
           return res.rows.item(0);
         } else {
           return null;
         }
       })
-      .catch(error => this.presentToast('Error obteniendo usuario' + error));
+      .catch((error: string) => this.presentToast('Error obteniendo usuario' + error));
   }
 
   async getUsers(): Promise<any[]> {
@@ -88,7 +125,7 @@ export class DbserviceService {
       this.db.executeSql(
         `INSERT OR REPLACE INTO usuarios(id, usuario, nombre, apellido, fechaNacimiento, password) VALUES (?, ?, ?, ?, ?, ?)`,
         [user.id, user.username, user.name, user.name, `24-06-2025`, user.username]
-      ).catch(e => console.error('Error guardando post', e));
+      ).catch((e: any) => console.error('Error guardando post', e));
     });
   }
 
@@ -99,7 +136,7 @@ export class DbserviceService {
         (?, ?, ?, ?, ?)
       `, [usuario, nombre, apellido, fechaNacimiento, password])
       // .then(() => this.presentToast('Usuario creado'))
-      .catch(error => this.presentToast('Error creando usuario' + error));
+      .catch((error: string) => this.presentToast('Error creando usuario' + error));
   }
 
   private async presentToast(message: string) {
